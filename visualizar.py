@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import matplotlib.pyplot as plt
 
 Nodo = dict[str, Any]
 
@@ -283,10 +284,92 @@ def ejecutar_busqueda(arreglo: list[int], objetivo: int) -> None:
 
 
 if __name__ == "__main__":
-    ejecutar_fibonacci(6)
+
+    valores_n = []
+    llamadas_normal = []
+    llamadas_memoria = []
+
+    # Este for genera varios puntos para f
+    for n in range(1, 11): 
+        print(f"\n===== n = {n} =====")
+
+        # Fibonacci normal
+        _, _, total_llamadas = fibonacci_recursivo(n)
+
+        # Fibonacci con memoria
+        _, _, total_llamadas_mem = fibonacci_recursivo_memoria(n)
+
+        # guardar puntos
+        valores_n.append(n)
+        llamadas_normal.append(total_llamadas)
+        llamadas_memoria.append(total_llamadas_mem)
+
+    # ---- GRAFICAR ----
+    plt.figure()
+
+    plt.plot(valores_n, llamadas_normal, marker='o',
+             label="Recursivo")
+    plt.plot(valores_n, llamadas_memoria, marker='s',
+             label="Con memoria")
+
+    plt.xlabel("n")
+    plt.ylabel("Número de llamadas")
+    plt.title("Comparación Fibonacci Recursivo vs Memoización")
+
+    plt.legend()
+    plt.grid(True)
+
+    plt.show()
 
     print("\n" + "#" * 70 + "\n")
 
-    arreglo_prueba = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    arreglo_prueba = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     objetivo_prueba = 6
     ejecutar_busqueda(arreglo_prueba, objetivo_prueba)
+
+    # ======================================================
+    # GRAFICA EXTRA 1: Fibonacci recursivo (sin memoria)
+    # ======================================================
+
+    plt.figure()
+    plt.plot(valores_n, llamadas_normal, marker='o')
+    plt.xlabel("n")
+    plt.ylabel("Número de llamadas")
+    plt.title("Fibonacci Recursivo (sin memoria)")
+    plt.grid(True)
+    plt.show()
+
+    # ======================================================
+    # GRAFICA EXTRA 2: Fibonacci con memoria dinámica
+    # ======================================================
+
+    plt.figure()
+    plt.plot(valores_n, llamadas_memoria, marker='s')
+    plt.xlabel("n")
+    plt.ylabel("Número de llamadas")
+    plt.title("Fibonacci con Memoria Dinámica")
+    plt.grid(True)
+    plt.show()
+
+    # ======================================================
+    # GRAFICA EXTRA 3: Búsqueda binaria (peor caso)
+    # ======================================================
+
+    tamanios = []
+    llamadas_binaria = []
+
+    for n in range(1, 65):
+        arreglo = list(range(n))
+        _, _, total = busqueda_binaria_arbol(arreglo, -1, 0, n - 1)
+        tamanios.append(n)
+        llamadas_binaria.append(total)
+
+    plt.figure()
+    plt.plot(valores_n, llamadas_normal)
+    plt.yscale("log")
+    plt.xlabel("n")
+    plt.ylabel("Número de llamadas (escala log)")
+    plt.title("Fibonacci Recursivo (crecimiento exponencial)")
+    plt.grid(True)
+    plt.show()
